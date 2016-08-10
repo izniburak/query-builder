@@ -20,12 +20,18 @@ dependencies:
 
 ```crystal
 require "query-builder"
+builder = Query::Builder.new
 
-query = Query::Builder.new
-p query.table("test").where("id", 17).or_where("language", "crystal").get
+p builder.table("test").where("id", 17).or_where("language", "crystal").get
 
 # Output:
 # "SELECT * FROM test WHERE id = '17' OR language = 'crystal' LIMIT 1"
+
+
+p builder.query("SELECT id, title FROM test_table WHERE id = ? AND title = ? ORDER BY id DESC LIMIT 10", [17, "Crystal"])
+
+# Output:
+# "SELECT id, title FROM test_table WHERE id = '17' AND title = 'Crystal' ORDER BY id DESC LIMIT 10"
 ```
 
 
