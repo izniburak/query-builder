@@ -5,14 +5,7 @@ module Query
 
 		def initialize
 		    @select = "*"
-			@table = ""
-			@join = ""
-			@where = ""
-			@group_by = ""
-			@having = ""
-			@order_by = ""
-			@limit = ""
-			@last_query = ""
+		    @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
 			@operators = ["=","!=","<",">","<=",">=","<>"]
 		end
 
@@ -138,14 +131,7 @@ module Query
 
 	
 		private def reset
-			@select = "*"
-			@table = ""
-			@join = ""
-			@where = ""
-			@group_by = ""
-			@having = ""
-			@order_by = ""
-			@limit = ""
+			@table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
 		end
 
 		private def end_query(query)
