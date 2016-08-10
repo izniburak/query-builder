@@ -43,11 +43,11 @@ module Query
 			join table, field1, field2, "INNER "
 		end
 
-		def where(field, operator, val = nil, type = "AND")
+		def where(field : String, operator, val = nil, type = "AND")
 			if operator.is_a? (Array)
-				query = " "
-				field.split("?").map_with_index do |v, i|  
-					query += "#{v}#{escape(operator[i])}" if !v.empty?
+				query = ""
+				field.split("?").map_with_index do |val, i|  
+					query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}"
 				end
 				where = query
 			elsif @operators.includes?(operator.to_s)
@@ -59,7 +59,7 @@ module Query
 			self
 		end
 
-		def or_where(field, operator, val = nil)
+		def or_where(field : String, operator, val = nil)
 			where field, operator, val, "OR"
 		end
 
@@ -68,7 +68,7 @@ module Query
 			self
 		end
 
-		def order_by(field, dir = nil)
+		def order_by(field : String, dir = nil)
 			if !dir.nil?
 				order_by = "#{field} #{dir.upcase}"
 			else
@@ -83,11 +83,11 @@ module Query
 			self
 		end
 
-		def having(field, operator, val = nil)
+		def having(field : String, operator, val = nil)
 			if operator.is_a? (Array)
 				query = ""
-				field.split("?").map_with_index do |v, i|  
-					query += "#{v}#{escape(operator[i])}" if !v.empty?
+				field.split("?").map_with_index do |val, i|  
+					query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}"
 				end
 				@having = query
 			else 
