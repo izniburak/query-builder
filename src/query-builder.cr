@@ -124,12 +124,12 @@ module Query
 			
 		end
 
-		def query(query : String, params : Array)
-			q = ""
-			query.split("?").map_with_index do |v, i|  
-				q += "#{v}#{escape(params[i])}" if !v.empty?
+		def query(sql : String, params : Array)
+			query = ""
+			sql.split("?").map_with_index do |val, i|  
+				query += i < params.size ? "#{val}#{escape(params[i])}" : "#{val}"
 			end
-			q
+			end_query query
 		end
 
 		def last_query
