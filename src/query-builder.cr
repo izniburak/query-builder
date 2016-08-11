@@ -4,8 +4,8 @@ module Query
 	class Builder
 
 		def initialize
-		    @select = "*"
-		    @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
+			@select = "*"
+			@table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
 			@operators = ["=","!=","<",">","<=",">=","<>"]
 		end
 
@@ -34,6 +34,18 @@ module Query
 
 		def inner_join(table : String, field1 : String, field2 = nil)
 			join table, field1, field2, "INNER "
+		end
+
+		def full_outer_join(table : String, field1 : String, field2 = nil)
+			join table, field1, field2, "FULL OUTER "
+		end
+
+		def left_outer_join(table : String, field1 : String, field2 = nil)
+			join table, field1, field2, "LEFT OUTER "
+		end
+
+		def right_outer_join(table : String, field1 : String, field2 = nil)
+			join table, field1, field2, "RIGHT OUTER "
 		end
 
 		def where(field : String, operator, val = nil, type = "AND")
