@@ -117,12 +117,24 @@ module Query
 			end_query query
 		end
 
-		def update
-			
+		def insert(datas : Hash)
+			fields = datas.keys
+			values = [] of String
+			datas.values.each { |val| values << "#{escape(val)}" }
+			query = "INSERT INTO #{@table} (#{fields.join(", ")}) VALUES (#{values.join(", ")})"
+			end_query query
 		end
 
-		def insert
-			
+		def update(datas : Hash)
+			query = "UPDATE #{@table} SET"
+			fields = datas.keys
+			values = [] of String
+			datas.values.map_with_index { |val, i| values << "#{fields[i]} = #{escape(val)}" }
+			query += " #{values.join(", ")}"
+			query += " WHERE #{@where}" if !@where.empty?
+			query += " ORDER BY #{@order_by}" if !@order_by.empty?
+			query += " LIMIT #{@limit}" if !@limit.to_s.empty?
+			end_query query
 		end
 
 		def delete
@@ -131,9 +143,7 @@ module Query
 
 		def query(sql : String, params : Array)
 			query = ""
-			sql.split("?").map_with_index do |val, i|  
-				query += i < params.size ? "#{val}#{escape(params[i])}" : "#{val}"
-			end
+			sql.split("?").map_with_index { |val, i| query += i < params.size ? "#{val}#{escape(params[i])}" : "#{val}" }
 			end_query query
 		end
 
