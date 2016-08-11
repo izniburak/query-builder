@@ -138,7 +138,12 @@ module Query
 		end
 
 		def delete
-			
+			query = "DELETE FROM #{@table}"
+			query += " WHERE #{@where}" if !@where.empty?
+			query += " ORDER BY #{@order_by}" if !@order_by.empty?
+			query += " LIMIT #{@limit}" if !@limit.to_s.empty?
+			query = "TRUNCATE TABLE #{@table}" if query == "DELETE FROM #{@table}"
+			end_query query
 		end
 
 		def query(sql : String, params : Array)
