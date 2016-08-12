@@ -65,6 +65,28 @@ module Query
       where field, operator, val, "OR"
     end
 
+    def in(field, values : Array, type = "AND", and_or = "")
+      keys = [] of String
+      values.each { |val| keys << "#{escape(val)}" }
+      @where += @where.empty? ? "#{field} #{and_or}IN (#{keys.join(", ")})" : " #{type} #{field} #{and_or}IN (#{keys.join(", ")})"
+      self
+    end
+
+    def or_in(field, values : Array)
+      in field, values, "OR", ""
+      self
+    end
+
+    def not_in(field, values : Array)
+      in field, values, "AND", "NOT "
+      self
+    end
+
+    def or_not_in(field, values : Array)
+      in field, values, "OR", "NOT "
+      self
+    end
+
     def limit(limit, limit_end = nil)
       @limit = !limit_end.nil? ? "#{limit}, #{limit_end}" : "#{limit}"
       self
