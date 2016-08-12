@@ -50,9 +50,7 @@ module Query
     def where(field : String, operator, val = nil, type = "AND")
       if operator.is_a?(Array)
         query = ""
-        field.split("?").map_with_index do |val, i|
-          query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}"
-        end
+        field.split("?").map_with_index { |val, i| query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}" }
         where = query
       elsif @operators.includes?(operator.to_s)
         where = "#{field} #{operator} #{escape(val)}"
@@ -90,9 +88,7 @@ module Query
     def having(field : String, operator, val = nil)
       if operator.is_a?(Array)
         query = ""
-        field.split("?").map_with_index do |val, i|
-          query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}"
-        end
+        field.split("?").map_with_index { |val, i| query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}" }
         @having = query
       else
         @having = @operators.includes?(operator.to_s) ? "#{field} #{operator} #{escape(val)}" : "#{field} > #{escape(operator)}"
