@@ -41,4 +41,10 @@ describe Query::Builder do
     query = builder.table("test").where("active", 1).in("id", [1, 2, 3]).get_all
     query.should eq "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
   end
+
+  it "sql where between" do
+    builder = Query::Builder.new
+    query = builder.table("test").where("status", 1).between("age", 18, 30).get_all
+    query.should eq "SELECT * FROM test WHERE status = '1' AND age BETWEEN '18' AND '30'"
+  end
 end
