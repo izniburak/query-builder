@@ -65,26 +65,43 @@ module Query
       where field, operator, val, "OR"
     end
 
-    def in(field, values : Array, type = "AND", and_or = "")
+    def in(field, values : Array, type = "", and_or = "AND")
       keys = [] of String
       values.each { |val| keys << "#{escape(val)}" }
-      @where += @where.empty? ? "#{field} #{and_or}IN (#{keys.join(", ")})" : " #{type} #{field} #{and_or}IN (#{keys.join(", ")})"
+      @where += @where.empty? ? "#{field} #{type}IN (#{keys.join(", ")})" : " #{and_or} #{field} #{type}IN (#{keys.join(", ")})"
       self
     end
 
     def or_in(field, values : Array)
-      in field, values, "OR", ""
+      in field, values, "", "OR"
       self
     end
 
     def not_in(field, values : Array)
-      in field, values, "AND", "NOT "
+      in field, values, "NOT ", "AND"
       self
     end
 
     def or_not_in(field, values : Array)
-      in field, values, "OR", "NOT "
+      in field, values, "NOT ", "OR"
       self
+    end
+
+    def between(field, value1, value2, type = "", and_or = "AND")
+    	@where += @where.empty? ? "#{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}" : " #{and_or} #{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}"
+    	self
+    end
+
+    def or_between(field, value1, value2)
+    	between field, value1, value2, "", "OR"
+    end
+
+    def not_between(field, value1, value2)
+    	between field, value1, value2, "NOT ", "AND"
+    end
+
+    def or_not_between(field, value1, value2)
+    	between field, value1, value2, "NOT ", "OR"
     end
 
     def limit(limit, limit_end = nil)
