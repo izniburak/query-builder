@@ -9,12 +9,12 @@ module Query
     end
 
     def select(fields)
-      @select = fields.is_a?(Array) ? fields.join(",") : fields.to_s
+      @select = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
       self
     end
 
     def table(name)
-      @table = name.is_a?(Array) ? name.join(",") : name.to_s
+      @table = name.is_a?(Array) ? name.join(", ") : name.to_s
       self
     end
 
