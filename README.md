@@ -28,16 +28,15 @@ p builder.table("test").where("id", 17).or_where("language", "crystal").get
 # "SELECT * FROM test WHERE id = '17' OR language = 'crystal' LIMIT 1"
 
 
-p builder.query("SELECT id, title FROM test_table WHERE id = ? AND title = ? ORDER BY id DESC LIMIT 10", [17, "Crystal"])
-
+p builder.table('test').select('id, title, status').order_by('id', 'desc').limit(10).get_all
 # Output:
-# "SELECT id, title FROM test_table WHERE id = '17' AND title = 'Crystal' ORDER BY id DESC LIMIT 10"
+# "SELECT id, title, status FROM test ORDER BY id DESC LIMIT 10"
 ```
 
 
-## Documentation
+## Docs 
 
-Coming soon...
+Documentation Page: [query-builder Docs](https://github.com/izniburak/query-builder/blob/master/DOCS.md)
 
 
 ## Contributing
@@ -51,4 +50,4 @@ Coming soon...
 
 ## Contributors
 
-- [izniburak](https://github.com/izniburak]) İzni Burak Demirtaş - creator, maintainer
+- [izniburak](https://github.com/izniburak) İzni Burak Demirtaş - creator, maintainer
