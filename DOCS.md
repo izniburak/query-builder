@@ -1,6 +1,7 @@
 # query-builder Documentation
 
 sql query builder library for crystal-lang
+
 Documentation Page
 
 
@@ -35,14 +36,22 @@ require "query-builder"
 builder = Query::Builder.new
 ```
 
-### select
-```crystal
-
-```
-
 ### table
 ```crystal
+# Usage 1: String Parameter
+builder.table("test")
 
+# Usage 2: Array Parameter
+builder.table(["foo", "bar"])
+```
+
+### select
+```crystal
+# Usage 1: String Parameter
+builder.table("test").select("id, title, content, tags")
+
+# Usage 2: Array Parameter
+builder.table("test").select(["id", "title", "content", "tags"])
 ```
 
 ### get - get_all
