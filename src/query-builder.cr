@@ -23,29 +23,11 @@ module Query
       self
     end
 
-    def left_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "LEFT "
-    end
-
-    def right_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "RIGHT "
-    end
-
-    def inner_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "INNER "
-    end
-
-    def full_outer_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "FULL OUTER "
-    end
-
-    def left_outer_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "LEFT OUTER "
-    end
-
-    def right_outer_join(table : String, field1 : String, field2 = nil)
-      join table, field1, field2, "RIGHT OUTER "
-    end
+    {% for method in %w(left right inner full_outer left_outer right_outer) %}
+      def {{method.id}}_join(table : String, field1 : String, field2 = nil)
+        join table, field1, field2, "#{"{{method.id}}"} ".gsub('_', ' ').upcase
+      end
+    {% end %}
 
     def where(field : String, operator, val = nil, type = "AND")
       if operator.is_a?(Array)
