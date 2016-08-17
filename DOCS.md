@@ -41,8 +41,13 @@ builder = Query::Builder.new
 # Usage 1: String Parameter
 builder.table("test")
 
+# Output: "SELECT * FROM test"
+```
+```crystal
 # Usage 2: Array Parameter
 builder.table(["foo", "bar"])
+
+# Output: "SELECT * FROM foo, bar"
 ```
 
 ### select
@@ -50,13 +55,13 @@ builder.table(["foo", "bar"])
 # Usage 1: String Parameter
 builder.table("test").select("id, title, content, tags")
 
+# Output: "SELECT id, title, content, tags FROM test"
+```
+```crystal
 # Usage 2: Array Parameter
 builder.table("test").select(["id", "title", "content", "tags"])
-```
 
-### get - get_all
-```crystal
-
+# Output: "SELECT id, title, content, tags FROM test"
 ```
 
 ### join 
@@ -101,7 +106,32 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### limit
 ```crystal
+# Usage 1: One parameter
+builder.table("test").limit(10).get_all 
 
+# Output: "SELECT * FROM test LIMIT 10"
+```
+```crystal
+# Usage 2: Two parameters
+builder.table("test").limit(10, 20).get_all 
+
+# Output: "SELECT * FROM test LIMIT 10, 20"
+```
+
+### get - get_all
+```crystal
+# 1. get
+# Return 1 record.
+builder.table("test").get 
+
+# Output: "SELECT * FROM test LIMIT 1"
+```
+```crystal
+# 2. get_all
+# Return many records.
+builder.table("test").get_all 
+
+# Output: "SELECT * FROM test"
 ```
 
 ### insert
