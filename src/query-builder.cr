@@ -86,6 +86,21 @@ module Query
     	between field, value1, value2, "NOT ", "OR"
     end
 
+    def like(field, value, type = "", and_or = "AND")
+      like = "%" + "#{value}" + "%"
+      if type == "%-"
+        like = "%" + "#{value}"
+      elsif type == "-%"
+        like = "#{value}" + "%"
+      end
+      @where += @where.empty? ? "#{field} LIKE #{escape(like)}" : " #{and_or} #{field} LIKE #{escape(like)}"
+      self
+    end
+
+    def or_like(field, value, type = "")
+      like field, value, type, "OR"
+    end
+
     def limit(limit, limit_end = nil)
       @limit = !limit_end.nil? ? "#{limit}, #{limit_end}" : "#{limit}"
       self

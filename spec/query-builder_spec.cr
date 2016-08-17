@@ -42,6 +42,12 @@ describe Query::Builder do
     query.should eq "SELECT * FROM test WHERE status = '1' AND age BETWEEN '18' AND '30'"
   end
 
+  it "sql where like" do
+    builder = Query::Builder.new
+    query = builder.table("test").where("status", 1).like("title", "crystal").limit(10).get_all
+    query.should eq "SELECT * FROM test WHERE status = '1' AND title LIKE '%crystal%' LIMIT 10"
+  end
+
   it "sql limit" do
     builder = Query::Builder.new
     query = builder.table("test").where("status", 1).limit(10, 20).get_all
