@@ -183,7 +183,7 @@ module Query
     end
 
     private def escape(data)
-      "'#{data.to_s.gsub("'", "\'")}'"
+      "'#{data.to_s.gsub("'", "\\'")}'"
     end
   end
 end
