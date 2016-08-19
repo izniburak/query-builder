@@ -29,22 +29,30 @@ module Query
       end
     {% end %}
 
-    def where(field : String, operator, val = nil, type = "AND")
+    def where(field : String, operator, val = nil, type = "", and_or = "AND")
       if operator.is_a?(Array)
         query = ""
-        field.split("?").map_with_index { |val, i| query += i < operator.size ? "#{val}#{escape(operator[i])}" : "#{val}" }
+        field.split("?").map_with_index { |val, i| query += i < operator.size ? "#{type}#{val}#{escape(operator[i])}" : "#{val}" }
         where = query
       elsif @operators.includes?(operator.to_s)
-        where = "#{field} #{operator} #{escape(val)}"
+        where = "#{type}#{field} #{operator} #{escape(val)}"
       else
-        where = "#{field} = #{escape(operator)}"
+        where = "#{type}#{field} = #{escape(operator)}"
       end
-      @where += @where.empty? ? where : " #{type} #{where}"
+      @where += @where.empty? ? where : " #{and_or} #{where}"
       self
     end
 
     def or_where(field : String, operator, val = nil)
-      where field, operator, val, "OR"
+      where field, operator, val, "", "OR"
+    end
+
+    def not_where(field : String, operator, val = nil)
+      where field, operator, val, "NOT ", "AND"
+    end
+
+    def or_not_where(field : String, operator, val = nil)
+      where field, operator, val, "NOT ", "OR"
     end
 
     def in(field, values : Array, type = "", and_or = "AND")
@@ -86,19 +94,27 @@ module Query
     	between field, value1, value2, "NOT ", "OR"
     end
 
-    def like(field, value, type = "", and_or = "AND")
+    def like(field, value, option = "", type = "", and_or = "AND")
       like = "%" + "#{value}" + "%"
-      if type == "%-"
+      if option == "%-"
         like = "%" + "#{value}"
-      elsif type == "-%"
+      elsif option == "-%"
         like = "#{value}" + "%"
       end
-      @where += @where.empty? ? "#{field} LIKE #{escape(like)}" : " #{and_or} #{field} LIKE #{escape(like)}"
+      @where += @where.empty? ? "#{field} #{type}LIKE #{escape(like)}" : " #{and_or} #{field} #{type}LIKE #{escape(like)}"
       self
     end
 
-    def or_like(field, value, type = "")
-      like field, value, type, "OR"
+    def or_like(field, value, option = "")
+      like field, value, option, "", "OR"
+    end
+
+    def not_like(field, value, option = "")
+      like field, value, option, "NOT ", "AND"
+    end
+
+    def or_not_like(field, value, option = "")
+      like field, value, option, "NOT ", "OR"
     end
 
     def limit(limit, limit_end = nil)
