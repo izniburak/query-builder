@@ -91,7 +91,17 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### group_by
 ```crystal
+# Usage 1: One parameter
+builder.table("test").where("status", 1).group_by("cat_id").get_all
 
+# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id"
+```
+
+```crystal
+# Usage 1: Array parameter
+builder.table("test").where("status", 1).group_by(["cat_id", "user_id"]).get_all
+
+# Output: "SELECT * FROM test WHERE status = '1' GROUP BY cat_id, user_id"
 ```
 
 ### having
@@ -101,7 +111,30 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### order_by
 ```crystal
+# Usage 1: One parameter
+builder.table("test").where("status", 1).order_by("id").get_all
 
+# Output: "SELECT * FROM test WHERE status = '1' ORDER BY id ASC"
+
+### OR
+
+builder.table("test").where("status", 1).order_by("id desc").get_all
+
+# Output: "SELECT * FROM test WHERE status = '1' ORDER BY id desc"
+```
+
+```crystal
+# Usage 1: Two parameters
+builder.table("test").where("status", 1).order_by("id", "desc").get_all
+
+# Output: "SELECT * FROM test WHERE status = '1' ORDER BY id DESC"
+```
+
+```crystal
+# Usage 3: Rand()
+builder.table("test").where("status", 1).order_by("rand()").limit(10).get_all
+
+# Output: "SELECT * FROM test WHERE status = '1' ORDER BY rand() LIMIT 10"
 ```
 
 ### limit
