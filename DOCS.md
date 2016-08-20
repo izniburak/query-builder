@@ -76,7 +76,29 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### in
 ```crystal
+builder.table("test").where("active", 1).in("id", [1, 2, 3]).get_all
 
+# Output: "SELECT * FROM test WHERE active = '1' AND id IN ('1', '2', '3')"
+```
+
+You can use this method in 4 ways. These;
+
+- in
+- or_in
+- not_in
+- or_not_in
+
+Example:
+```crystal
+builder.table("test").where("active", 1).not_in("id", [1, 2, 3]).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
+
+# OR 
+
+builder.table("test").where("active", 1).or_in("id", [1, 2, 3]).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' OR id IN ('1', '2', '3')"
 ```
 
 ### between
