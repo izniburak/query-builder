@@ -103,7 +103,29 @@ builder.table("test").where("active", 1).or_in("id", [1, 2, 3]).get_all
 
 ### between
 ```crystal
+builder.table("test").where("active", 1).between("age", 18, 25).get_all
 
+# Output: "SELECT * FROM test WHERE active = '1' AND age BETWEEN '18' AND '25'"
+```
+
+You can use this method in 4 ways. These;
+
+- between
+- or_between
+- not_between
+- or_not_between
+
+Example:
+```crystal
+builder.table("test").where("active", 1).not_between("age", 18, 25).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
+
+# OR 
+
+builder.table("test").where("active", 1).or_between("age", 18, 25).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' OR age BETWEEN '18' AND '25'"
 ```
 
 ### like
