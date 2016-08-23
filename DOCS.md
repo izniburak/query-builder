@@ -71,7 +71,41 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### where
 ```crystal
+builder.table("test").where("active", 1).get_all
 
+# Output: "SELECT * FROM test WHERE active = '1'"
+
+# OR 
+
+builder.table("test").where("age", ">=", 18).get_all
+
+# Output: "SELECT * FROM test WHERE age >= '18'"
+
+# OR 
+
+builder.table("test").or_where("age", [18, 20, 22]).get_all
+
+# Output: "SELECT * FROM test WHERE age = '18' OR age = '20' OR age = '22'"
+```
+
+You can use this method in 4 ways. These;
+
+- where
+- or_where
+- not_where
+- or_not_where
+
+Example:
+```crystal
+builder.table("test").where("active", 1).not_where("auth", 1).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
+
+# OR 
+
+builder.table("test").where("age", 20).or_where("age", '>', 25).get_all
+
+# Output: "SELECT * FROM test WHERE age = '20' OR age > '25'"
 ```
 
 ### in
