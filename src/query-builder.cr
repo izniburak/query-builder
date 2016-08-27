@@ -9,12 +9,48 @@ module Query
     end
 
     def select(fields)
-      @select = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
+      select = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
+      @select = @select.compare("*") == 0 ? select : "#{@select}, #{select}"
       self
     end
 
     def table(name)
       @table = name.is_a?(Array) ? name.join(", ") : name.to_s
+      self
+    end
+
+    def max(field, name = nil)
+      max = "MAX(#{field})"
+      max += " AS #{name}" if !name.nil?
+      @select = @select.compare("*") == 0 ? max : "#{@select}, #{max}"
+      self
+    end
+
+    def min(field, name = nil)
+      min = "MIN(#{field})"
+      min += " AS #{name}" if !name.nil?
+      @select = @select.compare("*") == 0 ? min : "#{@select}, #{min}"
+      self
+    end
+
+    def sum(field, name = nil)
+      sum = "SUM(#{field})"
+      sum += " AS #{name}" if !name.nil?
+      @select = @select.compare("*") == 0 ? sum : "#{@select}, #{sum}"
+      self
+    end
+
+    def count(field, name = nil)
+      count = "COUNT(#{field})"
+      count += " AS #{name}" if !name.nil?
+      @select = @select.compare("*") == 0 ? count : "#{@select}, #{count}"
+      self
+    end
+
+    def avg(field, name = nil)
+      avg = "AVG(#{field})"
+      avg += " AS #{name}" if !name.nil?
+      @select = @select.compare("*") == 0 ? avg : "#{@select}, #{avg}"
       self
     end
 

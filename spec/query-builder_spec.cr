@@ -18,6 +18,12 @@ describe Query::Builder do
     query.should eq "SELECT id, title, content, status FROM test"
   end
 
+  it "select functions (max, min, count, sum, avg)" do
+    builder = Query::Builder.new
+    query = builder.table("test").max("price", "maxPrice").get_all
+    query.should eq "SELECT MAX(price) AS maxPrice FROM test"
+  end
+
   it "sql join" do
     builder = Query::Builder.new
     query = builder.table("test").left_join("foo", "test.id", "foo.page_id").get_all
