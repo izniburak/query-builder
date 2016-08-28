@@ -8,51 +8,25 @@ module Query
       @operators = ["=", "!=", "<", ">", "<=", ">=", "<>"]
     end
 
+    def table(name)
+      @table = name.is_a?(Array) ? name.join(", ") : name.to_s
+      self
+    end
+
     def select(fields)
       select = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
       @select = @select.compare("*") == 0 ? select : "#{@select}, #{select}"
       self
     end
 
-    def table(name)
-      @table = name.is_a?(Array) ? name.join(", ") : name.to_s
-      self
-    end
-
-    def max(field, name = nil)
-      max = "MAX(#{field})"
-      max += " AS #{name}" if !name.nil?
-      @select = @select.compare("*") == 0 ? max : "#{@select}, #{max}"
-      self
-    end
-
-    def min(field, name = nil)
-      min = "MIN(#{field})"
-      min += " AS #{name}" if !name.nil?
-      @select = @select.compare("*") == 0 ? min : "#{@select}, #{min}"
-      self
-    end
-
-    def sum(field, name = nil)
-      sum = "SUM(#{field})"
-      sum += " AS #{name}" if !name.nil?
-      @select = @select.compare("*") == 0 ? sum : "#{@select}, #{sum}"
-      self
-    end
-
-    def count(field, name = nil)
-      count = "COUNT(#{field})"
-      count += " AS #{name}" if !name.nil?
-      @select = @select.compare("*") == 0 ? count : "#{@select}, #{count}"
-      self
-    end
-
-    def avg(field, name = nil)
-      avg = "AVG(#{field})"
-      avg += " AS #{name}" if !name.nil?
-      @select = @select.compare("*") == 0 ? avg : "#{@select}, #{avg}"
-      self
-    end
+    {% for method in %w(max min sum count avg) %}
+      def {{method.id}}(field, name = nil)
+        {{method.id}} = "#{"{{method.id}}".upcase}(#{field})"
+        {{method.id}} += " AS #{name}" if !name.nil?
+        @select = @select.compare("*") == 0 ? {{method.id}} : "#{@select}, #{{{method.id}}}"
+        self
+      end
+    {% end %}
 
     def join(table : String, field1 : String, field2 = nil, type = "")
       @join += field2.nil? ? " #{type}JOIN #{table} ON #{field1}" : " #{type}JOIN #{table} ON #{field1} = #{field2}"
@@ -114,20 +88,20 @@ module Query
     end
 
     def between(field, value1, value2, type = "", and_or = "AND")
-    	@where += @where.empty? ? "#{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}" : " #{and_or} #{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}"
-    	self
+      @where += @where.empty? ? "#{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}" : " #{and_or} #{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}"
+      self
     end
 
     def or_between(field, value1, value2)
-    	between field, value1, value2, "", "OR"
+      between field, value1, value2, "", "OR"
     end
 
     def not_between(field, value1, value2)
-    	between field, value1, value2, "NOT ", "AND"
+      between field, value1, value2, "NOT ", "AND"
     end
 
     def or_not_between(field, value1, value2)
-    	between field, value1, value2, "NOT ", "OR"
+      between field, value1, value2, "NOT ", "OR"
     end
 
     def like(field, value, option = "", type = "", and_or = "AND")
