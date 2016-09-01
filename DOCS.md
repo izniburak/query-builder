@@ -64,6 +64,20 @@ builder.table("test").select(["id", "title", "content", "tags"])
 # Output: "SELECT id, title, content, tags FROM test"
 ```
 
+### select functions (min, max, sum, avg, count)
+```crystal
+# Usage 1: 
+builder.table("test").max("price")
+
+# Output: "SELECT MAX(price) FROM test"
+```
+```crystal
+# Usage 2: 
+builder.table("test").count("id", "total_row")
+
+# Output: "SELECT COUNT(id) AS total_row FROM test"
+```
+
 ### join 
 ```crystal
 
