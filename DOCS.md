@@ -290,10 +290,24 @@ builder.table("test").get_all
 
 ### query
 ```crystal
+builder.query("SELECT id, title, content FROM pages WHERE id = ? AND active = ? ORDER BY updated_at DESC", [10, 1])
 
+# Output: "SELECT id, title, content FROM pages WHERE id = '10' AND active = '1' ORDER BY updated_at DESC" 
+
+# OR 
+
+builder.query("SELECT * FROM test WHERE title LIKE ? AND status = ? LIMIT 10", ["%Crystal%", 1])
+
+# Output: "SELECT * FROM test WHERE title LIKE '%Crystal%' AND status = '1' LIMIT 10" 
 ```
 
 ### last_query
 ```crystal
+builder.table("test").where("active", 1).order_by("id", "desc").limit(10).get_all 
 
+# Output: "SELECT * FROM test WHERE active = '1' ORDER BY id DESC LIMIT 10"
+
+builder.last_query
+
+# Output: "SELECT * FROM test WHERE active = '1' ORDER BY id DESC LIMIT 10"
 ```
