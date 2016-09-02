@@ -54,15 +54,27 @@ describe Query::Builder do
     query.should eq "SELECT * FROM test WHERE status = '1' AND title LIKE '%crystal%' LIMIT 10"
   end
 
-  it "sql limit" do
+  it "sql group by" do
     builder = Query::Builder.new
-    query = builder.table("test").where("status", 1).limit(10, 20).get_all
-    query.should eq "SELECT * FROM test WHERE status = '1' LIMIT 10, 20"
+    query = builder.table("test").where("status", 1).group_by("cat_id").get_all
+    query.should eq "SELECT * FROM test WHERE status = '1' GROUP BY cat_id"
+  end
+
+  it "sql having" do
+    builder = Query::Builder.new
+    query = builder.table("test").where("status", 1).group_by("city").having("COUNT(person)", 100).get_all
+    query.should eq "SELECT * FROM test WHERE status = '1' GROUP BY city HAVING COUNT(person) > '100'"
   end
 
   it "sql order by" do
     builder = Query::Builder.new
     query = builder.table("test").where("active", 1).order_by("id", "desc").limit(5).get_all
     query.should eq "SELECT * FROM test WHERE active = '1' ORDER BY id DESC LIMIT 5"
+  end
+
+  it "sql limit" do
+    builder = Query::Builder.new
+    query = builder.table("test").where("status", 1).limit(10, 20).get_all
+    query.should eq "SELECT * FROM test WHERE status = '1' LIMIT 10, 20"
   end
 end
