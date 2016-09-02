@@ -198,7 +198,21 @@ builder.table("test").where("status", 1).group_by(["cat_id", "user_id"]).get_all
 
 ### having
 ```crystal
+builder.table("test").where("status", 1).group_by("city").having("COUNT(person)", 100).get_all
 
+# Output: "SELECT * FROM test WHERE status = '1' GROUP BY city HAVING COUNT(person) > '100'"
+
+# OR 
+
+builder.table("test").where("active", 1).group_by("department_id").having("AVG(salary)", "<=", 500).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' GROUP BY department_id HAVING AVG(salary) <= '500'"
+
+# OR 
+
+builder.table("test").where("active", 1).group_by("department_id").having("AVG(salary) > ? AND MAX(salary) < ?", [250, 1000]).get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
 ```
 
 ### order_by
