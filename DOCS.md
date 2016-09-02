@@ -97,9 +97,9 @@ builder.table("test").where("age", ">=", 18).get_all
 
 # OR 
 
-builder.table("test").or_where("age", [18, 20, 22]).get_all
+builder.table("test").where("age = ? OR age = ?", [18, 20]).get_all
 
-# Output: "SELECT * FROM test WHERE age = '18' OR age = '20' OR age = '22'"
+# Output: "SELECT * FROM test WHERE age = '18' OR age = '20'"
 ```
 
 You can use this method in 4 ways. These;
