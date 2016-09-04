@@ -285,7 +285,15 @@ builder.table("test").get_all
 
 ### delete
 ```crystal
+builder.table("test").where("id", 17).delete
 
+# Output: "DELETE FROM test WHERE id = '17'"
+
+# OR
+
+builder.table("test").delete
+
+# Output: "TRUNCATE TABLE delete"
 ```
 
 ### query
