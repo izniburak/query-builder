@@ -77,4 +77,16 @@ describe Query::Builder do
     query = builder.table("test").where("status", 1).limit(10, 20).get_all
     query.should eq "SELECT * FROM test WHERE status = '1' LIMIT 10, 20"
   end
+
+  it "sql delete" do
+    builder = Query::Builder.new
+    query = builder.table("test").where("id", 17).delete
+    query.should eq "DELETE FROM test WHERE id = '17'"
+  end
+
+  it "sql delete truncate" do
+    builder = Query::Builder.new
+    query = builder.table("test").delete
+    query.should eq "TRUNCATE TABLE test"
+  end
 end
