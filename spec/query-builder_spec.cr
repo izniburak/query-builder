@@ -50,7 +50,7 @@ describe Query::Builder do
 
   it "sql where like" do
     builder = Query::Builder.new
-    query = builder.table("test").where("status", 1).like("title", "crystal").limit(10).get_all
+    query = builder.table("test").where("status", 1).like("title", "%crystal%").limit(10).get_all
     query.should eq "SELECT * FROM test WHERE status = '1' AND title LIKE '%crystal%' LIMIT 10"
   end
 
