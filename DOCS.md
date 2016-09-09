@@ -80,7 +80,32 @@ builder.table("test").count("id", "total_row")
 
 ### join 
 ```crystal
+builder.table("test as t").join("foo as f", "t.id", "f.t_id").where("t.status", 1).get_all
 
+# Output: "SELECT * FROM test as t JOIN foo as f ON t.id = f.t_id WHERE t.status = '1'"
+```
+
+You can use this method in 7 ways. These;
+
+- join
+- left_join
+- right_join
+- inner_join
+- full_outer_join
+- left_outer_join
+- right_outer_join
+
+Examples:
+```crystal
+builder.table("test as t").left_join("foo as f", "t.id", "f.t_id").get_all
+
+# Output: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id = f.t_id"
+```
+
+```crystal
+builder.table("test as t").full_outer_join("foo as f", "t.id", "f.t_id").get_all
+
+# Output: "SELECT * FROM test as t FULL OUTER JOIN foo as f ON t.id = f.t_id"
 ```
 
 ### where
