@@ -331,12 +331,26 @@ data = {
   "status" => 1
 }
 
-query = builder.table("test").insert(data)
+builder.table("test").insert(data)
+
+# Output:
+# "INSERT INTO test (title, slug, content, tags, time, status) VALUES ('query builder for Crystal', 'query-builder-for-crystal', 'sql query builder library for crystal-lang...', 'crystal, query, builder', '2016-06-21 00:00:00', '1')"
 ```
 
 ### update
 ```crystal
+data = {
+  "title" => "Kemal",
+  "slug" => "kemal-web-framework",
+  "content" => "Super Simple web framework for Crystal. (by @sdogruyol)",
+  "tags" => "crystal, framework, kemal",
+  "status" => 1
+}
 
+builder.table("test").where("id", 17).update(data)
+
+# Output:
+# "UPDATE test SET title = 'Kemal', slug = 'kemal-web-framework', content = 'Super Simple web framework for Crystal. (by @sdogruyol)', tags = 'crystal, framework, kemal', status = '1' WHERE id = '17'"
 ```
 
 ### delete
