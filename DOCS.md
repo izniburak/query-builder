@@ -203,7 +203,29 @@ builder.table("test").where("active", 1).or_between("age", 18, 25).get_all
 
 ### like
 ```crystal
+builder.table("test").where("active", 1).like("title", "%crystal%").get_all
 
+# Output: "SELECT * FROM test WHERE active = '1' AND title LIKE '%crystal%'"
+```
+
+You can use this method in 4 ways. These;
+
+- like
+- or_like
+- not_like
+- or_not_like
+
+Example:
+```crystal
+builder.table("test").where("active", 1).not_like("tags", "%dot-net%").get_all
+
+# Output: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
+
+# OR 
+
+builder.table("test").like("bio", "%crystal%").or_like("bio", "%ruby%").get_all
+
+# Output: "SELECT * FROM test WHERE bio LIKE '%crystal%' OR bio LIKE '%ruby%'"
 ```
 
 ### group_by
