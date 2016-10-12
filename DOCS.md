@@ -322,7 +322,16 @@ builder.table("test").get_all
 
 ### insert
 ```crystal
+data = {
+  "title" => "query builder for Crystal",
+  "slug" => "query-builder-for-crystal",
+  "content" => "sql query builder library for crystal-lang...",
+  "tags" => "crystal, query, builder",
+  "time" => Time.new(2016, 6, 21),
+  "status" => 1
+}
 
+query = builder.table("test").insert(data)
 ```
 
 ### update

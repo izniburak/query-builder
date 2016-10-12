@@ -89,4 +89,18 @@ describe Query::Builder do
     query = builder.table("test").delete
     query.should eq "TRUNCATE TABLE test"
   end
+
+  it "insert method" do 
+    builder = Query::Builder.new
+    data = {
+      "title" => "query builder for Crystal",
+      "slug" => "query-builder-for-crystal",
+      "content" => "sql query builder library for crystal-lang...",
+      "tags" => "crystal, query, builder",
+      "time" => Time.new(2016, 6, 21),
+      "status" => 1
+    }
+    query = builder.table("test").insert(data)
+    query.should eq "INSERT INTO test (title, slug, content, tags, time, status) VALUES ('query builder for Crystal', 'query-builder-for-crystal', 'sql query builder library for crystal-lang...', 'crystal, query, builder', '2016-06-21 00:00:00', '1')"
+  end
 end
