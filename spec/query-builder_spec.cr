@@ -90,17 +90,30 @@ describe Query::Builder do
     query.should eq "TRUNCATE TABLE test"
   end
 
-  it "insert method" do 
+  it "insert method" do
     builder = Query::Builder.new
     data = {
-      "title" => "query builder for Crystal",
-      "slug" => "query-builder-for-crystal",
+      "title"   => "query builder for Crystal",
+      "slug"    => "query-builder-for-crystal",
       "content" => "sql query builder library for crystal-lang...",
-      "tags" => "crystal, query, builder",
-      "time" => Time.new(2016, 6, 21),
-      "status" => 1
+      "tags"    => "crystal, query, builder",
+      "time"    => Time.new(2016, 6, 21),
+      "status"  => 1,
     }
     query = builder.table("test").insert(data)
     query.should eq "INSERT INTO test (title, slug, content, tags, time, status) VALUES ('query builder for Crystal', 'query-builder-for-crystal', 'sql query builder library for crystal-lang...', 'crystal, query, builder', '2016-06-21 00:00:00', '1')"
+  end
+
+  it "update method" do
+    builder = Query::Builder.new
+    data = {
+      "title"   => "Kemal",
+      "slug"    => "kemal-web-framework",
+      "content" => "Super Simple web framework for Crystal.",
+      "tags"    => "crystal, framework, kemal",
+      "status"  => 1,
+    }
+    query = builder.table("test").where("id", 17).update(data)
+    query.should eq "UPDATE test SET title = 'Kemal', slug = 'kemal-web-framework', content = 'Super Simple web framework for Crystal.', tags = 'crystal, framework, kemal', status = '1' WHERE id = '17'"
   end
 end
