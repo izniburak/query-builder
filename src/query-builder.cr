@@ -14,8 +14,8 @@ module Query
     end
 
     def select(fields)
-      select = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
-      @select = @select.compare("*") == 0 ? select : "#{@select}, #{select}"
+      value = fields.is_a?(Array) ? fields.join(", ") : fields.to_s
+      @select = @select.compare("*") == 0 ? value : "#{@select}, #{value}"
       self
     end
 
