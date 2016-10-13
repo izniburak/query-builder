@@ -1,5 +1,7 @@
 # query-builder
 
+[![Build Status](https://travis-ci.org/izniburak/query-builder.svg?branch=master)](https://travis-ci.org/izniburak/query-builder)
+
 sql query builder library for crystal-lang
 
 
