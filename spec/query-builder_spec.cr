@@ -116,4 +116,49 @@ describe Query::Builder do
     query = builder.table("test").where("id", 17).update(data)
     query.should eq "UPDATE test SET title = 'Kemal', slug = 'kemal-web-framework', content = 'Super Simple web framework for Crystal.', tags = 'crystal, framework, kemal', status = '1' WHERE id = '17'"
   end
+
+  it "table maintenance method: analyze" do
+    builder = Query::Builder.new
+    query = builder.table("test").analyze
+    query.should eq "ANALYZE TABLE test"
+
+    query = builder.table(["foo", "bar", "baz"]).analyze
+    query.should eq "ANALYZE TABLE foo, bar, baz"
+  end
+
+  it "table maintenance method: check" do
+    builder = Query::Builder.new
+    query = builder.table("test").check
+    query.should eq "CHECK TABLE test"
+
+    query = builder.table(["foo", "bar", "baz"]).check
+    query.should eq "CHECK TABLE foo, bar, baz"
+  end
+
+  it "table maintenance method: checksum" do
+    builder = Query::Builder.new
+    query = builder.table("test").checksum
+    query.should eq "CHECKSUM TABLE test"
+
+    query = builder.table(["foo", "bar", "baz"]).checksum
+    query.should eq "CHECKSUM TABLE foo, bar, baz"
+  end
+
+  it "table maintenance method: optimize" do
+    builder = Query::Builder.new
+    query = builder.table("test").optimize
+    query.should eq "OPTIMIZE TABLE test"
+
+    query = builder.table(["foo", "bar", "baz"]).optimize
+    query.should eq "OPTIMIZE TABLE foo, bar, baz"
+  end
+
+  it "table maintenance method: repair" do
+    builder = Query::Builder.new
+    query = builder.table("test").repair
+    query.should eq "REPAIR TABLE test"
+
+    query = builder.table(["foo", "bar", "baz"]).repair
+    query.should eq "REPAIR TABLE foo, bar, baz"
+  end
 end
