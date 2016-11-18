@@ -66,19 +66,19 @@ builder.table("test").select(["id", "title", "content", "tags"])
 
 ### select functions (min, max, sum, avg, count)
 ```crystal
-# Usage 1: 
+# Usage 1:
 builder.table("test").max("price")
 
 # Output: "SELECT MAX(price) FROM test"
 ```
 ```crystal
-# Usage 2: 
+# Usage 2:
 builder.table("test").count("id", "total_row")
 
 # Output: "SELECT COUNT(id) AS total_row FROM test"
 ```
 
-### join 
+### join
 ```crystal
 builder.table("test as t").join("foo as f", "t.id", "f.t_id").where("t.status", 1).get_all
 
@@ -114,13 +114,13 @@ builder.table("test").where("active", 1).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1'"
 
-# OR 
+# OR
 
 builder.table("test").where("age", ">=", 18).get_all
 
 # Output: "SELECT * FROM test WHERE age >= '18'"
 
-# OR 
+# OR
 
 builder.table("test").where("age = ? OR age = ?", [18, 20]).get_all
 
@@ -140,7 +140,7 @@ builder.table("test").where("active", 1).not_where("auth", 1).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' AND NOT auth = '1'"
 
-# OR 
+# OR
 
 builder.table("test").where("age", 20).or_where("age", '>', 25).get_all
 
@@ -167,7 +167,7 @@ builder.table("test").where("active", 1).not_in("id", [1, 2, 3]).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' AND id NOT IN ('1', '2', '3')"
 
-# OR 
+# OR
 
 builder.table("test").where("active", 1).or_in("id", [1, 2, 3]).get_all
 
@@ -194,7 +194,7 @@ builder.table("test").where("active", 1).not_between("age", 18, 25).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
 
-# OR 
+# OR
 
 builder.table("test").where("active", 1).or_between("age", 18, 25).get_all
 
@@ -221,7 +221,7 @@ builder.table("test").where("active", 1).not_like("tags", "%dot-net%").get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
 
-# OR 
+# OR
 
 builder.table("test").like("bio", "%crystal%").or_like("bio", "%ruby%").get_all
 
@@ -249,13 +249,13 @@ builder.table("test").where("status", 1).group_by("city").having("COUNT(person)"
 
 # Output: "SELECT * FROM test WHERE status = '1' GROUP BY city HAVING COUNT(person) > '100'"
 
-# OR 
+# OR
 
 builder.table("test").where("active", 1).group_by("department_id").having("AVG(salary)", "<=", 500).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' GROUP BY department_id HAVING AVG(salary) <= '500'"
 
-# OR 
+# OR
 
 builder.table("test").where("active", 1).group_by("department_id").having("AVG(salary) > ? AND MAX(salary) < ?", [250, 1000]).get_all
 
@@ -293,13 +293,13 @@ builder.table("test").where("status", 1).order_by("rand()").limit(10).get_all
 ### limit
 ```crystal
 # Usage 1: One parameter
-builder.table("test").limit(10).get_all 
+builder.table("test").limit(10).get_all
 
 # Output: "SELECT * FROM test LIMIT 10"
 ```
 ```crystal
 # Usage 2: Two parameters
-builder.table("test").limit(10, 20).get_all 
+builder.table("test").limit(10, 20).get_all
 
 # Output: "SELECT * FROM test LIMIT 10, 20"
 ```
@@ -308,14 +308,14 @@ builder.table("test").limit(10, 20).get_all
 ```crystal
 # 1. get
 # Return 1 record.
-builder.table("test").get 
+builder.table("test").get
 
 # Output: "SELECT * FROM test LIMIT 1"
 ```
 ```crystal
 # 2. get_all
 # Return many records.
-builder.table("test").get_all 
+builder.table("test").get_all
 
 # Output: "SELECT * FROM test"
 ```
@@ -370,18 +370,83 @@ builder.table("test").delete
 ```crystal
 builder.query("SELECT id, title, content FROM pages WHERE id = ? AND active = ? ORDER BY updated_at DESC", [10, 1])
 
-# Output: "SELECT id, title, content FROM pages WHERE id = '10' AND active = '1' ORDER BY updated_at DESC" 
+# Output: "SELECT id, title, content FROM pages WHERE id = '10' AND active = '1' ORDER BY updated_at DESC"
 
-# OR 
+# OR
 
 builder.query("SELECT * FROM test WHERE title LIKE ? AND status = ? LIMIT 10", ["%Crystal%", 1])
 
-# Output: "SELECT * FROM test WHERE title LIKE '%Crystal%' AND status = '1' LIMIT 10" 
+# Output: "SELECT * FROM test WHERE title LIKE '%Crystal%' AND status = '1' LIMIT 10"
+```
+
+### analyze
+```crystal
+builder.table("test").analyze
+
+# Output: "ANALYZE TABLE test"
+
+# OR
+
+builder.table(["foo", "bar", "baz"]).analyze
+
+# Output: "ANALYZE TABLE foo, bar, baz"
+```
+
+### check
+```crystal
+builder.table("test").check
+
+# Output: "CHECK TABLE test"
+
+# OR
+
+builder.table(["foo", "bar", "baz"]).check
+
+# Output: "CHECK TABLE foo, bar, baz"
+```
+
+### checksum
+```crystal
+builder.table("test").checksum
+
+# Output: "CHECKSUM TABLE test"
+
+# OR
+
+builder.table(["foo", "bar", "baz"]).checksum
+
+# Output: "CHECKSUM TABLE foo, bar, baz"
+```
+
+### optimize
+```crystal
+builder.table("test").optimize
+
+# Output: "OPTIMIZE TABLE test"
+
+# OR
+
+builder.table(["foo", "bar", "baz"]).optimize
+
+# Output: "OPTIMIZE TABLE foo, bar, baz"
+```
+
+### repair
+```crystal
+builder.table("test").repair
+
+# Output: "REPAIR TABLE test"
+
+# OR
+
+builder.table(["foo", "bar", "baz"]).repair
+
+# Output: "REPAIR TABLE foo, bar, baz"
 ```
 
 ### last_query
 ```crystal
-builder.table("test").where("active", 1).order_by("id", "desc").limit(10).get_all 
+builder.table("test").where("active", 1).order_by("id", "desc").limit(10).get_all
 
 # Output: "SELECT * FROM test WHERE active = '1' ORDER BY id DESC LIMIT 10"
 
