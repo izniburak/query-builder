@@ -203,6 +203,31 @@ module Query
       end_query query
     end
 
+    def analyze
+      query = "ANALYZE TABLE #{@table}"
+      end_query query
+    end
+
+    def check
+      query = "CHECK TABLE #{@table}"
+      end_query query
+    end
+
+    def checksum
+      query = "CHECKSUM TABLE #{@table}"
+      end_query query
+    end
+
+    def optimize
+      query = "OPTIMIZE TABLE #{@table}"
+      end_query query
+    end
+
+    def repair
+      query = "REPAIR TABLE #{@table}"
+      end_query query
+    end
+
     def last_query
       @last_query
     end
