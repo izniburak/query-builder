@@ -197,6 +197,17 @@ module Query
       end_query query
     end
 
+    def drop(check_exists = false)
+      query = "DROP TABLE#{check_exists ? " IF EXISTS" : ""} #{@table}"
+      end_query query
+    end
+
+    def alter(command : String, column : String, data_type = "")
+      query = "ALTER TABLE #{@table} #{command.gsub('_', ' ').upcase} #{column}"
+      query += " #{data_type}" if !data_type.empty?
+      end_query query
+    end
+
     def query(sql : String, params : Array)
       query = ""
       sql.split("?").map_with_index { |val, i| query += i < params.size ? "#{val}#{escape(params[i])}" : "#{val}" }

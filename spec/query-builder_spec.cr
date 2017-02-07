@@ -161,4 +161,38 @@ describe Query::Builder do
     query = builder.table(["foo", "bar", "baz"]).repair
     query.should eq "REPAIR TABLE foo, bar, baz"
   end
+
+  it "drop table" do
+    builder = Query::Builder.new
+    query = builder.table("test").drop
+    query.should eq "DROP TABLE test"
+
+    query = builder.table(["test", "fo", "bar"]).drop
+    query.should eq "DROP TABLE test, fo, bar"
+
+    # check table(s) exists
+    query = builder.table("test").drop(true)
+    query.should eq "DROP TABLE IF EXISTS test"
+  end
+
+  it "alter table" do
+    builder = Query::Builder.new
+    query = builder.table("test").alter("add", "test_column", "varchar(255)")
+    query.should eq "ALTER TABLE test ADD test_column varchar(255)"
+
+    query = builder.table("test").alter("modify_column", "test_column", "int NOT NULL")
+    query.should eq "ALTER TABLE test MODIFY COLUMN test_column int NOT NULL"
+
+    query = builder.table("test").alter("modify", "test_date", "datetime NOT NULL")
+    query.should eq "ALTER TABLE test MODIFY test_date datetime NOT NULL"
+
+    query = builder.table("test").alter("drop_column", "test_column")
+    query.should eq "ALTER TABLE test DROP COLUMN test_column"
+
+    query = builder.table("test").alter("drop_index", "index_name")
+    query.should eq "ALTER TABLE test DROP INDEX index_name"
+
+    query = builder.table("test").alter("add_constraint", "my_primary_key", "PRIMARY KEY (column1, column2)")
+    query.should eq "ALTER TABLE test ADD CONSTRAINT my_primary_key PRIMARY KEY (column1, column2)"
+  end
 end
