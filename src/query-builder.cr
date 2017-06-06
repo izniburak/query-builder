@@ -236,6 +236,7 @@ module Query
     end
 
     private def escape(data)
+      return "NULL" if data.nil?
       "'#{data.to_s.gsub("'", "\\'")}'"
     end
   end

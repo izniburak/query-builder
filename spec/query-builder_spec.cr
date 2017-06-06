@@ -104,6 +104,19 @@ describe Query::Builder do
     query.should eq "INSERT INTO test (title, slug, content, tags, time, status) VALUES ('query builder for Crystal', 'query-builder-for-crystal', 'sql query builder library for crystal-lang...', 'crystal, query, builder', '2016-06-21 00:00:00', '1')"
   end
 
+  it "insert method with nil data" do
+    builder = Query::Builder.new
+    data = {
+      "title"   => "query builder for Crystal",
+      "slug"    => "query-builder-for-crystal",
+      "content" => "sql query builder library for crystal-lang...",
+      "tags"    => nil,
+      "time"    => Time.new(2016, 6, 21),
+    }
+    query = builder.table("test").insert(data)
+    query.should eq "INSERT INTO test (title, slug, content, tags, time) VALUES ('query builder for Crystal', 'query-builder-for-crystal', 'sql query builder library for crystal-lang...', NULL, '2016-06-21 00:00:00')"
+  end
+
   it "update method" do
     builder = Query::Builder.new
     data = {
@@ -115,6 +128,17 @@ describe Query::Builder do
     }
     query = builder.table("test").where("id", 17).update(data)
     query.should eq "UPDATE test SET title = 'Kemal', slug = 'kemal-web-framework', content = 'Super Simple web framework for Crystal.', tags = 'crystal, framework, kemal', status = '1' WHERE id = '17'"
+  end
+
+  it "update method with nil data" do
+    builder = Query::Builder.new
+    data = {
+      "title" => "Kemal",
+      "slug"  => "kemal-web-framework",
+      "tags"  => nil,
+    }
+    query = builder.table("test").where("id", 17).update(data)
+    query.should eq "UPDATE test SET title = 'Kemal', slug = 'kemal-web-framework', tags = NULL WHERE id = '17'"
   end
 
   it "table maintenance method: analyze" do
