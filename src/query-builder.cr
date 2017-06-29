@@ -227,6 +227,7 @@ module Query
 
     private def reset
       @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
+      @select = "*"
     end
 
     private def end_query(query)
