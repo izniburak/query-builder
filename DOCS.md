@@ -40,7 +40,7 @@ builder = Query::Builder.new
 
 This method is used to set the escape character for your queries.
 
-Default value: "\\" (for SQL syntax)
+Default value: "\\\\" (for SQL syntax)
 
 For sql syntax: 
 ```crystal
