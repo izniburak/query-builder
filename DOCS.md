@@ -36,6 +36,22 @@ require "query-builder"
 builder = Query::Builder.new
 ```
 
+## escape_character
+
+This method is used to set the escape character for your queries.
+
+Default value: "\\" (for SQL syntax)
+
+For sql syntax: 
+```crystal
+builder.escape_character("\\")
+```
+
+For PostgreSQL syntax:
+```crystal
+builder.escape_character("'")
+```
+
 ### table
 ```crystal
 # Usage 1: String Parameter
