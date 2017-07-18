@@ -3,6 +3,7 @@ require "./query-builder/*"
 module Query
   class Builder
     def initialize
+      @escape_character = "\\"
       @select = "*"
       @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
       @operators = ["=", "!=", "<", ">", "<=", ">=", "<>"]
@@ -225,6 +226,10 @@ module Query
       @last_query
     end
 
+    def escape_character(char)
+      @escape_character = char
+    end
+
     private def reset
       @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
       @select = "*"
@@ -238,7 +243,7 @@ module Query
 
     private def escape(data)
       return "NULL" if data.nil?
-      "'#{data.to_s.gsub("'", "\\'")}'"
+      "'#{data.to_s.gsub(/\\|'/) { |c| @escape_character + c }}'"
     end
   end
 end
