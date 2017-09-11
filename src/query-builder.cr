@@ -2,8 +2,9 @@ require "./query-builder/*"
 
 module Query
   class Builder
+    @@escape_character = "\\"
+
     def initialize
-      @escape_character = "\\"
       @select = "*"
       @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
       @operators = ["=", "!=", "<", ">", "<=", ">=", "<>"]
@@ -226,8 +227,8 @@ module Query
       @last_query
     end
 
-    def escape_character(char)
-      @escape_character = char
+    def self.escape_character=(character : String)
+      @@escape_character = character
     end
 
     private def reset
@@ -243,7 +244,7 @@ module Query
 
     private def escape(data)
       return "NULL" if data.nil?
-      "'#{data.to_s.gsub(/\\|'/) { |c| @escape_character + c }}'"
+      "'#{data.to_s.gsub(/\\|'/) { |c| @@escape_character + c }}'"
     end
   end
 end

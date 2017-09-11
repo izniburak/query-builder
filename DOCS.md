@@ -44,12 +44,12 @@ Default value: "\\\\" (for SQL syntax)
 
 For sql syntax: 
 ```crystal
-builder.escape_character("\\")
+Query::Builder.escape_character = "\\"
 ```
 
 For PostgreSQL syntax:
 ```crystal
-builder.escape_character("'")
+Query::Builder.escape_character = "'"
 ```
 
 ### table
