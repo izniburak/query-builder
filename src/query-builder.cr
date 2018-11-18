@@ -6,7 +6,9 @@ module Query
 
     def initialize
       @select = "*"
-      @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
+      @table, @join, @where, @group_by, @having, @order_by, @last_query = "", "", "", "", "", "", ""
+      @limit, @offset = "", ""
+      @query_count = 0
       @operators = ["=", "!=", "<", ">", "<=", ">=", "<>"]
     end
 
@@ -74,57 +76,68 @@ module Query
       self
     end
 
-    def or_in(field, values : Array)
+    def or_in(field : String, values : Array)
       in field, values, "", "OR"
       self
     end
 
-    def not_in(field, values : Array)
+    def not_in(field : String, values : Array)
       in field, values, "NOT ", "AND"
       self
     end
 
-    def or_not_in(field, values : Array)
+    def or_not_in(field : String, values : Array)
       in field, values, "NOT ", "OR"
       self
     end
 
-    def between(field, value1, value2, type = "", and_or = "AND")
+    def between(field : String, value1, value2, type = "", and_or = "AND")
       @where += @where.empty? ? "#{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}" : " #{and_or} #{field} #{type}BETWEEN #{escape(value1)} AND #{escape(value2)}"
       self
     end
 
-    def or_between(field, value1, value2)
+    def or_between(field : String, value1, value2)
       between field, value1, value2, "", "OR"
     end
 
-    def not_between(field, value1, value2)
+    def not_between(field : String, value1, value2)
       between field, value1, value2, "NOT ", "AND"
     end
 
-    def or_not_between(field, value1, value2)
+    def or_not_between(field : String, value1, value2)
       between field, value1, value2, "NOT ", "OR"
     end
 
-    def like(field, value, type = "", and_or = "AND")
+    def like(field : String, value, type = "", and_or = "AND")
       @where += @where.empty? ? "#{field} #{type}LIKE #{escape(value)}" : " #{and_or} #{field} #{type}LIKE #{escape(value)}"
       self
     end
 
-    def or_like(field, value)
+    def or_like(field : String, value)
       like field, value, "", "OR"
     end
 
-    def not_like(field, value)
+    def not_like(field : String, value)
       like field, value, "NOT ", "AND"
     end
 
-    def or_not_like(field, value)
+    def or_not_like(field : String, value)
       like field, value, "NOT ", "OR"
     end
 
     def limit(limit, limit_end = nil)
       @limit = !limit_end.nil? ? "#{limit}, #{limit_end}" : "#{limit}"
+      self
+    end
+
+    def offset(offset)
+      @offset = "#{offset}"
+      self
+    end
+
+    def pagination(per_page, page)
+      @limit = "#{per_page}"
+      @offset = "#{((page > 0 ? page : 1) - 1) * per_page}"
       self
     end
 
@@ -167,6 +180,7 @@ module Query
       query += " HAVING #{@having}" if !@having.empty?
       query += " ORDER BY #{@order_by}" if !@order_by.empty?
       query += " LIMIT #{@limit}" if !@limit.to_s.empty?
+      query += " OFFSET #{@offset}" if !@offset.to_s.empty?
       end_query query
     end
 
@@ -227,18 +241,24 @@ module Query
       @last_query
     end
 
+    def query_count
+      @query_count
+    end
+
     def self.escape_character=(character : String)
       @@escape_character = character
     end
 
     private def reset
-      @table, @join, @where, @group_by, @having, @order_by, @limit, @last_query = "", "", "", "", "", "", "", ""
+      @table, @join, @where, @group_by, @having, @order_by, @last_query = "", "", "", "", "", "", ""
+      @limit, @offset = "", ""
       @select = "*"
     end
 
     private def end_query(query)
       reset
       @last_query = query
+      @query_count += 1
       query
     end
 

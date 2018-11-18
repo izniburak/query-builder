@@ -306,7 +306,7 @@ builder.table("test").where("status", 1).order_by("rand()").limit(10).get_all
 # Output: "SELECT * FROM test WHERE status = '1' ORDER BY rand() LIMIT 10"
 ```
 
-### limit
+### limit - offset
 ```crystal
 # Usage 1: One parameter
 builder.table("test").limit(10).get_all
@@ -318,6 +318,24 @@ builder.table("test").limit(10).get_all
 builder.table("test").limit(10, 20).get_all
 
 # Output: "SELECT * FROM test LIMIT 10, 20"
+```
+```crystal
+# Usage 3: with offset method
+builder.table("test").limit(10).offset(10).get_all
+
+# Output: "SELECT * FROM test LIMIT 10 OFFSET 10"
+```
+
+### pagination
+```crystal
+# First parameter: Data count of per page
+# Second parameter: Active page
+
+builder.table("test").pagination(15, 1).get_all
+# Output: "SELECT * FROM test LIMIT 15 OFFSET 0"
+
+builder.table("test").pagination(15, 2).get_all
+# Output: "SELECT * FROM test LIMIT 15 OFFSET 15"
 ```
 
 ### get - get_all
@@ -458,6 +476,13 @@ builder.table("test").repair
 builder.table(["foo", "bar", "baz"]).repair
 
 # Output: "REPAIR TABLE foo, bar, baz"
+```
+
+### query_count
+```crystal
+builder.query_count
+
+# The number of all SQL queries on the page until the end of the beginning.
 ```
 
 ### last_query
